@@ -24,7 +24,7 @@
     "prettier": "^2.6.0"
   },
   "lint-staged": {
-    "src/*": "prettier src --write"
+    "./src/**/*": "prettier src --write"
   },
   "prettier": {
     "trailingComma": "es5",
