@@ -18,13 +18,8 @@
     "micro": "^9.3.4"
   },
   "devDependencies": {
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.7",
     "micro-dev": "^3.0.0",
     "prettier": "^2.6.0"
-  },
-  "lint-staged": {
-    "./src/**/*": "prettier src --write"
   },
   "prettier": {
     "trailingComma": "es5",
