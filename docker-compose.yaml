@@ -1,0 +1,12 @@
+# the-diabetic-compass (tdc)
+version: "3.8"
+services:
+  # database service
+  db:
+    container_name: tdc-db
+    restart: always
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - "3306:3306"
