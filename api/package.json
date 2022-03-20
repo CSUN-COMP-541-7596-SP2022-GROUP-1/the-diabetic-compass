@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "prettier src --write",
     "prepare": "husky install"
   },
   "author": "",
@@ -23,7 +24,7 @@
     "prettier": "^2.6.0"
   },
   "lint-staged": {
-    "src/*": "prettier --write"
+    "src/*": "prettier src --write"
   },
   "prettier": {
     "trailingComma": "es5",
