@@ -1,13 +1,27 @@
-# the-diabetic-compass (tdc)
 version: "3.8"
 services:
-  # database service
-  db:
-    container_name: tdc-db
-    restart: always
-    image: mysql:8
+  rambler:
+    build: "./rambler"
+    depends_on:
+      - db
     environment:
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - RAMBLER_DRIVER=$RAMBLER_DRIVER
+      - RAMBLER_PROTOCOL=$RAMBLER_PROTOCOL
+      - RAMBLER_HOST=db
+      - RAMBLER_PORT=$RAMBLER_PORT
+      - RAMBLER_USER=$RAMBLER_USER
+      - RAMBLER_PASSWORD=$RAMBLER_PASSWORD
+      - RAMBLER_DATABASE=$RAMBLER_DATABASE
+      - RAMBLER_DIRECTORY=$RAMBLER_DIRECTORY
+      - RAMBLER_TABLE=$RAMBLER_TABLE
+
+  db:
+    image: mysql:8.0.28
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_USER=$DB_USER
+      - MYSQL_PASSWORD=$DB_PASSWORD
     ports:
       - "3306:3306"

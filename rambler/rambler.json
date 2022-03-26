@@ -1,0 +1,11 @@
+{
+  "database": "tdc-dev",
+  "user": "mysql",
+  "password": "password",
+  "host": "localhost",
+  "port": 3306,
+  "driver": "mysql",
+  "protocol": "tcp",
+  "directory": "migrations",
+  "table": "migrations"
+}
