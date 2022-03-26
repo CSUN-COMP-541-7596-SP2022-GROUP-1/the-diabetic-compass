@@ -10,7 +10,7 @@ FROM alpine:3.15
 RUN apk update
 
 # mysql
-RUN apk add --no-cache mysql mysql-client
+RUN apk add --no-cache postgresql-client
 
 # rambler
 COPY --from=rambler_builder /go/bin/rambler /usr/local/bin

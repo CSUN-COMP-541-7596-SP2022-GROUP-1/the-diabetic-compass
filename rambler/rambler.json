@@ -1,10 +1,10 @@
 {
   "database": "tdc-dev",
-  "user": "mysql",
+  "user": "admin",
   "password": "password",
   "host": "localhost",
-  "port": 3306,
-  "driver": "mysql",
+  "port": 5432,
+  "driver": "postgresql",
   "protocol": "tcp",
   "directory": "migrations",
   "table": "migrations"

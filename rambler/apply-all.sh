@@ -3,7 +3,7 @@
 MAX_RETRIES=30
 
 printf "Waiting for db connection"
-until mysql --host=$RAMBLER_HOST --port=$RAMBLER_PORT --user=$RAMBLER_USER --password=$RAMBLER_PASSWORD $RAMBLER_DATABASE || [ $MAX_RETRIES == 0 ]; do
+until psql postgres://$RAMBLER_USER:$RAMBLER_PASSWORD@$RAMBLER_HOST:$RAMBLER_PORT/$RAMBLER_DATABASE || [ $MAX_RETRIES == 0 ]; do
   MAX_RETRIES=$(($MAX_RETRIES-1))
   sleep 1
 done
