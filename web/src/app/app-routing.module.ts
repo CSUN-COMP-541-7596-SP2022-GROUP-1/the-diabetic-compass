@@ -7,9 +7,9 @@ import { CreateAccountPageComponent } from './pages/create-account-page/create-a
 import { SignInPageComponent } from './pages/sign-in-page/sign-in-page.component';
 
 const routes: Routes = [
-  { path: '', component: LandingPageComponent },
   { path: 'create-account', component: CreateAccountPageComponent },
   { path: 'sign-in', component: SignInPageComponent },
+  { path: '', component: LandingPageComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
