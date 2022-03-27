@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FirebaseModule } from './firebase/firebase.module';
 import { ApiModule } from './api/api.module';
+import { PagesModule } from './pages/pages.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +16,7 @@ import { ApiModule } from './api/api.module';
     AppRoutingModule,
     FirebaseModule,
     ApiModule,
+    PagesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
