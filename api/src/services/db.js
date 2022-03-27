@@ -1,0 +1,113 @@
+const assert = require('assert');
+const path = require('path');
+
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../../.env'),
+});
+const debug = require('debug')('tdc:api/services/db');
+const { Sequelize, DataTypes } = require('sequelize');
+const moment = require('moment');
+
+const { createSecret } = require('../../lib/create-secret');
+
+const DB_CONFIG = {
+  USERNAME: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
+  HOSTNAME: process.env.DB_HOST,
+  PORT: process.env.DB_PORT,
+  DATABASE_NAME: process.env.DB_NAME,
+  DIALECT: process.env.DB_DIALECT,
+};
+
+debug(DB_CONFIG);
+
+const db = new Sequelize(
+  `${DB_CONFIG.DIALECT}://${DB_CONFIG.USERNAME}:${DB_CONFIG.PASSWORD}@${DB_CONFIG.HOSTNAME}:${DB_CONFIG.PORT}/${DB_CONFIG.DATABASE_NAME}`,
+  {
+    logging: (msg) => debug(msg),
+  }
+);
+exports.db = db;
+
+const User = db.define(
+  'User',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    firebaseAuthUid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    tableName: 'users',
+    underscored: true,
+  }
+);
+assert(User === db.models.User);
+exports.User = User;
+
+const UserRole = db.define(
+  'UserRole',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM(['ADMIN', 'USER']),
+      defaultValue: 'USER',
+    },
+  },
+  {
+    tableName: 'user_roles',
+    underscored: true,
+  }
+);
+// one : one relation
+User.hasOne(UserRole);
+UserRole.belongsTo(User);
+assert(UserRole === db.models.UserRole);
+exports.UserRole = UserRole;
+
+const UserToken = db.define(
+  'UserToken',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    expiresAt: {
+      type: DataTypes.DATE,
+      defaultValue: moment().add(30, 'days').toDate(),
+    },
+    secret: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      defaultValue: createSecret,
+    },
+  },
+  { tableName: 'user_tokens', underscored: true }
+);
+// one : many relation
+User.hasMany(UserToken);
+UserToken.belongsTo(User);
+assert(UserToken === db.models.UserToken);
+exports.UserToken = UserToken;
