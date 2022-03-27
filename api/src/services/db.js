@@ -37,13 +37,25 @@ const User = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    // Choosing to use STRING datatype here to match datatype in database
+    // STRING is equivalent to varchar(255)
     firebaseAuthUid: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
+    // Choosing to use STRING datatype here to match datatype in database
+    // STRING is equivalent to varchar(255)
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+    },
+    firstName: {
+      type: DataTypes.TEXT,
+    },
+    lastName: {
+      type: DataTypes.TEXT,
     },
   },
   {
@@ -76,7 +88,7 @@ const UserRole = db.define(
     underscored: true,
   }
 );
-// one : one relation
+// one to one relation
 User.hasOne(UserRole);
 UserRole.belongsTo(User);
 assert(UserRole === db.models.UserRole);
@@ -106,7 +118,7 @@ const UserToken = db.define(
   },
   { tableName: 'user_tokens', underscored: true }
 );
-// one : many relation
+// one to many relation
 User.hasMany(UserToken);
 UserToken.belongsTo(User);
 assert(UserToken === db.models.UserToken);
