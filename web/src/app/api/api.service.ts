@@ -4,6 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { ApiModule } from './api.module';
 import { AuthService } from '../firebase/auth.service';
 
+interface ApiGetOptions {
+  headers?: { [header: string]: string };
+}
+
+interface ApiPostOptions {
+  headers?: { [header: string]: string };
+  body?: {};
+}
+
 @Injectable({
   providedIn: ApiModule,
 })
@@ -13,9 +22,7 @@ export class ApiService {
     private firebaseAuthService: AuthService
   ) {}
 
-  signIn() {}
+  get(url: string, options: ApiGetOptions) {}
 
-  signOut() {
-    return this.firebaseAuthService.signOut();
-  }
+  post(url: string, options: ApiPostOptions) {}
 }

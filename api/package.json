@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ajv": "^8.11.0",
     "assert": "^2.0.0",
     "debug": "^4.3.4",
     "dotenv": "^16.0.0",

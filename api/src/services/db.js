@@ -27,7 +27,11 @@ const db = new Sequelize(
     logging: (msg) => debug(msg),
   }
 );
-exports.db = db;
+
+function createTransaction() {
+  return db.transaction();
+}
+exports.createTransaction = createTransaction;
 
 const User = db.define(
   'User',
