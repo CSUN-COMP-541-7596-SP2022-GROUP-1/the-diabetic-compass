@@ -13,7 +13,7 @@ function microValidate(schema, params) {
   const validate = ajv.compile(schema);
   const valid = validate(params);
   if (!valid) {
-    throw createError(400, validate.errors[0].message, validate.errors[0]);
+    throw createError(400, validate.errors[0].message);
   }
 }
 exports.microValidate = microValidate;

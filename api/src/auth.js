@@ -23,7 +23,7 @@ async function authenticate(req) {
 
   const [tokenType, tokenSecret] = token.split('/');
   microAssert(
-    [TOKEN_TYPES.FIREBASE_AUTH].includes(tokenType),
+    [TOKEN_TYPES.FIREBASE_AUTH, TOKEN_TYPES.TDC_AUTH].includes(tokenType),
     400,
     'Bad request'
   );

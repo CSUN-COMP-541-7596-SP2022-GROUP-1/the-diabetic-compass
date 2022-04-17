@@ -16,10 +16,9 @@ async function _createAccount(
       type: 'object',
       properties: {
         email: { type: 'string' },
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
       },
       required: ['email'],
+      additionalProperties: true,
     },
     params
   );
