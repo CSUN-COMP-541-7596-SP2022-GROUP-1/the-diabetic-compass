@@ -1,34 +1,13 @@
 <app-header></app-header>
 
 <div class="form-container">
-  <form [formGroup]="signInForm" (ngSubmit)="handleSubmitSignInForm()">
-    <div class="mb-3">
-      <label for="email" class="form-label">Email address</label>
-      <input
-        type="email"
-        class="form-control"
-        id="email"
-        formControlName="email"
-      />
-    </div>
+  <h3>Sign in</h3>
 
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        formControlName="password"
-      />
-    </div>
-
-    <div class="mb-3 btn-container">
-      <button type="submit" class="btn btn-primary">Sign In</button>
-    </div>
-  </form>
+  <app-sign-in-form></app-sign-in-form>
+  <small
+    >Don't have an account?
+    <a [routerLink]="['/create-account']"
+      >Click here to create an account.</a
+    ></small
+  >
 </div>
-
-<!-- For development purposes -->
-<h3>signInForm values</h3>
-<pre>{{ this.signInForm.value | json }}</pre>
-<!--  -->
