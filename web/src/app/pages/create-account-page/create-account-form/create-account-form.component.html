@@ -1,0 +1,47 @@
+<form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="email">Email: </label>
+    <input
+      class="form-control"
+      id="email"
+      type="email"
+      formControlName="email"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password: </label>
+    <input
+      class="form-control"
+      id="password"
+      type="password"
+      formControlName="password"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="reenterPassword">Re-enter Password: </label>
+    <input
+      class="form-control"
+      id="reenterPassword"
+      type="password"
+      formControlName="reenterPassword"
+    />
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="!createAccountForm.valid"
+    class="btn btn-primary"
+  >
+    Create
+  </button>
+</form>
+
+<!-- For debugging purposes -->
+<!-- <pre>
+  {{ createAccountForm.value | json }}
+</pre>
+<pre>
+  {{ createAccountForm.status }}
+</pre> -->

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
-import { AuthService } from '../../firebase/auth.service';
+import { AuthService } from '../../modules/firebase/auth.service';
 
 @Component({
   selector: 'app-sign-in-page',

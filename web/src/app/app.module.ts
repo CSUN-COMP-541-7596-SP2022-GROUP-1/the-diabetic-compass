@@ -4,8 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FirebaseModule } from './firebase/firebase.module';
-import { ApiModule } from './api/api.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
+import { ApiModule } from './modules/api/api.module';
 import { PagesModule } from './pages/pages.module';
 
 @NgModule({

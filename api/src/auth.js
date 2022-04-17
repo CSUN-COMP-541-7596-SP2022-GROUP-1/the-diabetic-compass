@@ -5,8 +5,8 @@ const { User, UserRole } = require('./services/db');
 const { microAssert } = require('../lib/micro-assert');
 
 const TOKEN_TYPES = {
-  FIREBASE_AUTH: 'firebase-auth-uid',
-  TDC_AUTH: 'tdc-user-token',
+  FIREBASE_AUTH: 'firebase',
+  TDC_AUTH: 'tdc',
 };
 exports.TOKEN_TYPES = TOKEN_TYPES;
 
@@ -54,11 +54,9 @@ async function authenticate(req) {
               },
             ],
             attributes: {
-              /**
-               * HACK to remove the UserId field from the userRole object
-               */
+              // HACK to remove the UserId field from the userRole object
               exclude: ['UserId'],
-              /** End of HACK */
+              // End of HACK
             },
             where: {
               userId: context.user?.id,

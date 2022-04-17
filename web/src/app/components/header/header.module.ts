@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NgxBootstrapModule } from '../../ngx-bootstrap/ngx-bootstrap.module';
-import { FirebaseModule } from '../../firebase/firebase.module';
+import { NgxBootstrapModule } from '../../modules/ngx-bootstrap/ngx-bootstrap.module';
+import { FirebaseModule } from '../../modules/firebase/firebase.module';
 import { HeaderComponent } from './header.component';
 
 @NgModule({

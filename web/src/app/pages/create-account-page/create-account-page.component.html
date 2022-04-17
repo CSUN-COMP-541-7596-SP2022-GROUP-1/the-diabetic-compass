@@ -1,3 +1,11 @@
 <app-header></app-header>
 
-<h2>Create Account Page!</h2>
+<div class="form-container">
+  <h3>Create an account</h3>
+
+  <app-create-account-form></app-create-account-form>
+  <small
+    >Already have an account?
+    <a [routerLink]="['/sign-in']">Click here to sign in.</a></small
+  >
+</div>

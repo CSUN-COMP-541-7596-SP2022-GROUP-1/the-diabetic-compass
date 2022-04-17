@@ -22,7 +22,24 @@ export class ApiService {
     private firebaseAuthService: AuthService
   ) {}
 
-  get(url: string, options: ApiGetOptions) {}
+  get(url: string, options: ApiGetOptions) {
+    options = {
+      ...options,
+      headers: {
+        Authorization: `Bearer: firebase/${this.firebaseAuthService.currentUser}`,
+      },
+    };
 
-  post(url: string, options: ApiPostOptions) {}
+    return this.http.get(url, options);
+  }
+
+  post(url: string, body: any, options: ApiPostOptions) {
+    options = {
+      ...options,
+      headers: {
+        Authorization: `Bearer: firebase/${this.firebaseAuthService.currentUser}`,
+      },
+    };
+    return this.http.post(url, body, options);
+  }
 }

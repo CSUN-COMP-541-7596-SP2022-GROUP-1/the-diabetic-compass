@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import firebase from 'firebase';
 
-import { AuthService } from '../../firebase/auth.service';
+import { AuthService } from '../../modules/firebase/auth.service';
 
 const SIGN_IN_ROUTE = 'sign-in';
 
