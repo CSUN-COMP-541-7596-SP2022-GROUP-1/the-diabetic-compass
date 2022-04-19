@@ -52,15 +52,29 @@ export class CreateAccountFormComponent implements OnInit {
 
   async onSubmit() {
     if (this.createAccountForm.valid) {
-      const { user } = await this.auth.signUpWithEmailAndPassword({
-        email: this.createAccountForm.value.email,
-        password: this.createAccountForm.value.password,
-      });
+      let user;
+
+      try {
+        ({ user } = await this.auth.signUpWithEmailAndPassword({
+          email: this.createAccountForm.value.email,
+          password: this.createAccountForm.value.password,
+        }));
+      } catch (err: any) {
+        // TODO: Consider error handling cases for when there is an issue
+        // signing up with firebase
+        if (err.code === 'auth/email-already-in-use') {
+        }
+      }
 
       if (user) {
-        await this.api.post('/create-account', {
-          email: this.createAccountForm.value.email,
-        });
+        try {
+          await this.api.post('/create-account', {
+            email: this.createAccountForm.value.email,
+          });
+        } catch (err) {
+          // TODO: Consider error handling cases for when there is an issue with
+          // creating an account via our api
+        }
 
         await this.router.navigate(['/']);
       }

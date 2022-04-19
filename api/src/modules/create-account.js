@@ -1,17 +1,26 @@
-const { json, createError } = require('micro');
+const assert = require('assert');
+const { json } = require('micro');
 
-const { microAssert } = require('../../lib/micro-assert');
-const { microValidate } = require('../../lib/micro-validate');
+const { makeApiError } = require('../../lib/make-api-error');
+const { validate } = require('../../lib/validate');
 const { authorize, authenticate, TOKEN_TYPES } = require('../auth');
-const { User, UserRole, createTransaction } = require('../services/db');
+const {
+  createTransaction,
+  User,
+  UserRole,
+  UserFirebaseAuth,
+} = require('../services/db');
 
 async function _createAccount(
   params,
   context,
-  { UserInjection = User, UserRoleInjection = UserRole } = {}
+  {
+    UserInjection = User,
+    UserRoleInjection = UserRole,
+    UserFirebaseAuthInjection = UserFirebaseAuth,
+  } = {}
 ) {
-  authorize('create-account', context);
-  microValidate(
+  validate(
     {
       type: 'object',
       properties: {
@@ -22,44 +31,87 @@ async function _createAccount(
     },
     params
   );
-  microAssert(!context.user, 400, 'User already exists');
-  microAssert(context.token, 400, 'Bad request');
 
-  const [tokenType, tokenSecret] = context.token.split('/');
+  authorize('create-account', context);
+
+  const [tokenType, tokenSecret] = (context.token || '/').split('/');
+
+  assert(
+    [TOKEN_TYPES.FIREBASE_AUTH, TOKEN_TYPES.TDC_AUTH].includes(tokenType),
+    makeApiError(400, 'Bad credentials type')
+  );
+  assert(tokenSecret, makeApiError(400, 'Bad credentials'));
 
   let transaction;
-  let user;
-  let userRole;
+
+  const data = {};
+
   try {
     transaction = await createTransaction();
 
     if (tokenType === TOKEN_TYPES.FIREBASE_AUTH) {
-      user = await UserInjection.create(
-        {
+      let userCreated;
+      [data.user, userCreated] = await UserInjection.findOrCreate({
+        where: {
           email: params.email,
-          firebaseAuthUid: tokenSecret,
-          firstName: params.firstName,
-          lastName: params.lastName,
         },
-        { raw: true }
-      );
+        defaults: {
+          firstName: params.firstName ?? 'Guest',
+          lastName: params.lastName ?? 'User',
+        },
+        transaction,
+      });
+
+      if (!userCreated) {
+        throw makeApiError(422, 'User already exists');
+      }
+
+      let userFirebaseAuthCreated;
+      [data.userFirebaseAuth, userFirebaseAuthCreated] =
+        await UserFirebaseAuthInjection.findOrCreate({
+          where: {
+            authUid: tokenSecret,
+          },
+          defaults: {
+            userId: data.user.id,
+          },
+          transaction,
+        });
+
+      if (!userFirebaseAuthCreated) {
+        assert(
+          userFirebaseAuth.userId === data.user.id,
+          makeApiError(403, 'Fobidden')
+        );
+      }
     }
 
-    userRole = await UserRoleInjection.create({
-      userId: user.id,
+    let userRoleCreated;
+    [data.userRole, userRoleCreated] = await UserRoleInjection.findOrCreate({
+      where: {
+        userId: data.user.id,
+      },
+      transaction,
     });
+
+    if (!userRoleCreated) {
+      throw makeApiError(422, 'User role already assigned');
+    }
 
     await transaction.commit();
   } catch (err) {
+    debug(err);
+    debug(data);
+
     await transaction.rollback();
-    throw createError(500, 'Database error', err);
+
+    throw err.statusCode
+      ? err
+      : makeApiError(500, 'Failed to create user', err);
   }
 
   return {
-    data: {
-      user,
-      userRole,
-    },
+    data,
   };
 }
 

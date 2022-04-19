@@ -43,13 +43,6 @@ const User = db.define(
     },
     // Choosing to use STRING datatype here to match datatype in database
     // STRING is equivalent to varchar(255)
-    firebaseAuthUid: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    // Choosing to use STRING datatype here to match datatype in database
-    // STRING is equivalent to varchar(255)
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -127,3 +120,31 @@ User.hasMany(UserToken);
 UserToken.belongsTo(User);
 assert(UserToken === db.models.UserToken);
 exports.UserToken = UserToken;
+
+const UserFirebaseAuth = db.define(
+  'UserFirebaseAuth',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    // Choosing to use STRING datatype here to match datatype in database
+    // STRING is equivalent to varchar(255)
+    authUid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+  },
+  { tableName: 'user_firebase_auths', underscored: true }
+);
+// one to one relation
+User.hasOne(UserFirebaseAuth);
+UserFirebaseAuth.belongsTo(User);
+assert(UserFirebaseAuth === db.models.UserFirebaseAuth);
+exports.UserFirebaseAuth = UserFirebaseAuth;

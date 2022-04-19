@@ -1,8 +1,9 @@
 // api auth logic
-const { createError } = require('micro');
+const assert = require('assert');
+const debug = require('debug')('tdc:auth');
 
-const { User, UserRole } = require('./services/db');
-const { microAssert } = require('../lib/micro-assert');
+const { User, UserRole, UserFirebaseAuth } = require('./services/db');
+const { makeApiError } = require('../lib/make-api-error');
 
 const TOKEN_TYPES = {
   FIREBASE_AUTH: 'firebase',
@@ -14,60 +15,59 @@ async function authenticate(req) {
   const { authorization: credentials } = req.headers;
 
   if (!credentials) {
-    throw createError(401, 'Missing credentials');
+    throw makeApiError(400, 'Missing credentials');
   }
 
   const [type, token] = (credentials || '').split(' ');
-  microAssert(type === 'Bearer', 400, 'Bad request');
-  microAssert(token, 400, 'Bad request');
+  assert(type === 'Bearer', makeApiError(400, 'Bad request'));
+  assert(token, makeApiError(400, 'Bad request'));
 
   const [tokenType, tokenSecret] = token.split('/');
-  microAssert(
+  assert(
     [TOKEN_TYPES.FIREBASE_AUTH, TOKEN_TYPES.TDC_AUTH].includes(tokenType),
-    400,
-    'Bad request'
+    makeApiError(400, 'Bad credentials type')
   );
 
   const context = {
     token,
   };
+
   if (tokenType === TOKEN_TYPES.FIREBASE_AUTH) {
     try {
-      context.user =
+      context.userFirebaseAuth =
         (tokenSecret &&
+          (await UserFirebaseAuth.findOne({
+            where: { authUid: tokenSecret },
+            raw: true,
+          }))) ||
+        null;
+
+      context.user =
+        (context.userFirebaseAuth &&
           (await User.findOne({
             where: {
-              firebaseAuthUid: tokenSecret,
+              id: context.userFirebaseAuth.userId,
             },
             raw: true,
           }))) ||
         null;
 
       context.userRole =
-        (context.user?.id &&
+        (context.user &&
           (await UserRole.findOne({
-            include: [
-              {
-                model: User,
-                required: true,
-                attributes: [],
-              },
-            ],
-            attributes: {
-              // HACK to remove the UserId field from the userRole object
-              exclude: ['UserId'],
-              // End of HACK
-            },
             where: {
-              userId: context.user?.id,
+              userId: context.user.id,
             },
             raw: true,
           }))) ||
         null;
     } catch (err) {
-      throw createError(500, 'Internal Server Error', err);
+      debug(err);
+      throw makeApiError(500, 'Failed to authenticate', err);
     }
   }
+
+  debug(context);
 
   return context;
 }
@@ -77,20 +77,19 @@ function _capabilities(context) {
   if (!context) {
     return [];
   }
-  // Universal capabilities
-  const universalCapabilities = ['create-account'];
+  // Basic capabilities
+  const basicCapabilities = ['create-account'];
 
-  // Additional capabilities
-  const scopedCapabilities = [];
+  // Scoped capabilities
 
-  return [...universalCapabilities, ...scopedCapabilities];
+  return [...basicCapabilities];
 }
 
 function authorize(capability, context) {
   const authorized = _capabilities(context).includes(capability);
 
   if (!authorized) {
-    throw createError(401, 'Unauthorized');
+    throw makeApiError(401, 'Unauthorized');
   }
 
   return true;
