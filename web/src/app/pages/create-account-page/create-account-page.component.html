@@ -1,11 +1,21 @@
 <app-header></app-header>
 
-<div class="form-container">
-  <h3>Create an account</h3>
+<div class="container">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-4">
+      <h3 style="text-align: center">Create an account</h3>
 
-  <app-create-account-form></app-create-account-form>
-  <small
-    >Already have an account?
-    <a [routerLink]="['/sign-in']">Click here to sign in.</a></small
+      <app-create-account-form></app-create-account-form>
+    </div>
+  </div>
+
+  <div
+    class="row align-items-center justify-content-center"
+    style="margin-top: 0.5rem"
   >
+    <small style="text-align: center"
+      >Already have an account?
+      <a [routerLink]="['/sign-in']">Click here to sign in.</a></small
+    >
+  </div>
 </div>
