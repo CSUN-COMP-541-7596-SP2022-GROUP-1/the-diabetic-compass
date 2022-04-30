@@ -5,9 +5,11 @@ import { PagesModule } from './pages/pages.module';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { CreateAccountPageComponent } from './pages/create-account-page/create-account-page.component';
 import { SignInPageComponent } from './pages/sign-in-page/sign-in-page.component';
+import { ResourcesPageComponent } from './pages/resources-page/resources-page.component';
 
 const routes: Routes = [
   { path: 'create-account', component: CreateAccountPageComponent },
+  { path: 'resources', component: ResourcesPageComponent },
   { path: 'sign-in', component: SignInPageComponent },
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
 ];
