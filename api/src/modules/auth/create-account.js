@@ -113,6 +113,7 @@ async function createAccount(
 
   return {
     data,
+    errors: [],
   };
 }
 

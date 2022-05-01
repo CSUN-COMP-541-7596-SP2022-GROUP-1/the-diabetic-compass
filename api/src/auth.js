@@ -4,6 +4,7 @@ const debug = require('debug')('tdc:auth');
 
 const { User, UserRole, UserFirebaseAuth } = require('./services/db');
 const { makeApiError } = require('../lib/make-api-error');
+const { USER_ROLE_TYPES } = require('./interfaces');
 
 const TOKEN_TYPES = {
   FIREBASE_AUTH: 'firebase',
@@ -85,7 +86,7 @@ function _capabilities(context, resource) {
 
   // User capabilities
   if (
-    context.userRole?.role === 'USER' &&
+    context.userRole?.role === USER_ROLE_TYPES.USER &&
     context.user?.id === resource.userId
   ) {
     const userCapabilities = [...anyonesCapabilities, 'users/read'];
@@ -95,7 +96,7 @@ function _capabilities(context, resource) {
 
   // Admin capabilities
   if (
-    context.userRole?.role === 'ADMIN' &&
+    context.userRole?.role === USER_ROLE_TYPES.ADMIN &&
     context.user?.id === resource.userId
   ) {
     const adminCapabilities = [...anyonesCapabilities, 'users/read'];

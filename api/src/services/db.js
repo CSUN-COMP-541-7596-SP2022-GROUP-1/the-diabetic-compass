@@ -1,6 +1,5 @@
 const assert = require('assert');
 const path = require('path');
-
 require('dotenv').config({
   path: path.resolve(__dirname, '../../../.env'),
 });
@@ -8,6 +7,7 @@ const debug = require('debug')('tdc:api/services/db');
 const { Sequelize, DataTypes } = require('sequelize');
 const moment = require('moment');
 
+const { USER_ROLE_TYPES } = require('../interfaces');
 const { createSecret } = require('../../lib/create-secret');
 
 const DB_CONFIG = {
@@ -76,8 +76,8 @@ const UserRole = db.define(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM(['ADMIN', 'USER']),
-      defaultValue: 'USER',
+      type: DataTypes.ENUM([USER_ROLE_TYPES.ADMIN, USER_ROLE_TYPES.USER]),
+      defaultValue: USER_ROLE_TYPES.USER,
     },
   },
   {
@@ -91,6 +91,7 @@ UserRole.belongsTo(User);
 assert(UserRole === db.models.UserRole);
 exports.UserRole = UserRole;
 
+const DEFAULT_USER_TOKEN_EXPIRATION_IN_DAYS = 30;
 const UserToken = db.define(
   'UserToken',
   {
@@ -105,7 +106,9 @@ const UserToken = db.define(
     },
     expiresAt: {
       type: DataTypes.DATE,
-      defaultValue: moment().add(30, 'days').toDate(),
+      defaultValue: moment()
+        .add(DEFAULT_USER_TOKEN_EXPIRATION_IN_DAYS, 'days')
+        .toDate(),
     },
     secret: {
       type: DataTypes.TEXT,
