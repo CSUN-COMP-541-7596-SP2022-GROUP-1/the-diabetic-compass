@@ -1,8 +1,50 @@
 <app-header></app-header>
 
+<!-- alerts -->
+<div *ngFor="let alert of alerts">
+  <alert
+    class="position-relative"
+    [type]="alert.type"
+    [dismissible]="alert.dismissible"
+    [dismissOnTimeout]="alert.timeout"
+    (onClosed)="onCloseAlert(alert.id)"
+    ><strong>{{ alert.type | uppercase }} </strong>{{ alert.msg }}</alert
+  >
+</div>
+
 <div class="container-fluid">
   <ng-container *ngIf="this.userInfo$ | async as userInfo; else loading">
     <h2>Hi, {{ userInfo.firstName }} {{ userInfo.lastName }}!</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item" *ngFor="let tab of PROFILE_TABS">
+            <a
+              class="nav-link"
+              style="cursor: pointer"
+              [ngClass]="{ active: isTabActive(tab.id) }"
+              (click)="setActiveTab(tab.id)"
+              >{{ tab.name }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <ng-container *ngIf="activeTab.id === 'editName'">
+          <h5 class="card-title text-center">{{ activeTab.title }}</h5>
+          <app-edit-name-form
+            [userInfo]="userInfo"
+            (alerts)="showAlerts($event)"
+          ></app-edit-name-form>
+        </ng-container>
+
+        <ng-container *ngIf="activeTab.id === 'resetPassword'">
+          <h5 class="card-title text-center">{{ activeTab.title }}</h5>
+          <app-reset-password-form></app-reset-password-form>
+        </ng-container>
+      </div>
+    </div>
   </ng-container>
 
   <ng-template #loading>

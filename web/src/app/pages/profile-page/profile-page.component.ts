@@ -3,6 +3,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ApiService } from 'src/app/modules/api/api.service';
 import { AuthService } from 'src/app/modules/firebase/auth.service';
+import { Alert } from 'src/app/interfaces/alert';
 
 type UserInfo = {
   email: string;
@@ -20,11 +21,29 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   userSub: Subscription | null;
   userPollSub: Subscription | null;
 
+  PROFILE_TABS = [
+    {
+      id: 'editName',
+      name: 'Edit Name',
+      title: 'Edit your name',
+    },
+    {
+      id: 'resetPassword',
+      name: 'Reset Password',
+      title: 'Reset your password',
+    },
+  ];
+
+  activeTab: { id: string; name: string; title: string };
+  alerts: Alert[] = [];
+
   constructor(private api: ApiService, private auth: AuthService) {
     this.userInfo$ = new BehaviorSubject<UserInfo>(null);
 
     this.userSub = null;
     this.userPollSub = null;
+
+    this.activeTab = this.PROFILE_TABS[0];
   }
 
   ngOnInit(): void {
@@ -53,5 +72,27 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub?.unsubscribe();
+  }
+
+  isTabActive(tabId: string) {
+    return this.activeTab.id === tabId;
+  }
+
+  setActiveTab(tabId: string) {
+    const tab = this.PROFILE_TABS.find((tab) => tab.id === tabId);
+
+    if (!tab) {
+      return;
+    }
+
+    this.activeTab = tab;
+  }
+
+  showAlerts(alerts: Alert[]) {
+    this.alerts = alerts;
+  }
+
+  onCloseAlert(alertId: string) {
+    this.alerts = [...this.alerts.filter((alert) => alert.id !== alertId)];
   }
 }

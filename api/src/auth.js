@@ -89,7 +89,11 @@ function _capabilities(context, resource) {
     context.userRole?.role === USER_ROLE_TYPES.USER &&
     context.user?.id === resource.userId
   ) {
-    const userCapabilities = [...anyonesCapabilities, 'users/read'];
+    const userCapabilities = [
+      ...anyonesCapabilities,
+      'users/read',
+      'users/update-name',
+    ];
 
     return userCapabilities;
   }
@@ -99,7 +103,11 @@ function _capabilities(context, resource) {
     context.userRole?.role === USER_ROLE_TYPES.ADMIN &&
     context.user?.id === resource.userId
   ) {
-    const adminCapabilities = [...anyonesCapabilities, 'users/read'];
+    const adminCapabilities = [
+      ...anyonesCapabilities,
+      'users/read',
+      'users/update-name',
+    ];
 
     return adminCapabilities;
   }

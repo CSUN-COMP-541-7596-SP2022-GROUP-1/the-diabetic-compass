@@ -104,7 +104,7 @@ async function createAccount(
     debug(err);
     debug(data);
 
-    await transaction.rollback();
+    await transaction?.rollback();
 
     throw err.statusCode
       ? err
