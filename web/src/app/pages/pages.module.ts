@@ -5,6 +5,7 @@ import { CreateAccountPageModule } from './create-account-page/create-account-pa
 import { LandingPageModule } from './landing-page/landing-page.module';
 import { SignInPageModule } from './sign-in-page/sign-in-page.module';
 import { ResourcesPageModule } from './resources-page/resources-page.module';
+import { ProfilePageModule } from './profile-page/profile-page.module';
 
 @NgModule({
   declarations: [],
@@ -14,6 +15,7 @@ import { ResourcesPageModule } from './resources-page/resources-page.module';
     LandingPageModule,
     SignInPageModule,
     ResourcesPageModule,
+    ProfilePageModule,
   ],
   // Necessary to export these modules so any module that imports
   // this module has access to the listed modules
@@ -22,6 +24,7 @@ import { ResourcesPageModule } from './resources-page/resources-page.module';
     LandingPageModule,
     SignInPageModule,
     ResourcesPageModule,
+    ProfilePageModule,
   ],
 })
 export class PagesModule {}

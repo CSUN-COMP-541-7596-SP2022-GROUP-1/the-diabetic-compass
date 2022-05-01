@@ -35,6 +35,17 @@
         >
       </li>
     </ul>
+
+    <ng-container *ngIf="this.user$ | async as user">
+      <div class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['/profile']"
+          routerLinkActive="active"
+          >Profile</a
+        >
+      </div>
+    </ng-container>
     <div>
       <ng-container *ngIf="this.user$ | async as user; else signIn">
         <button class="btn btn-danger" (click)="handleSignOut()">

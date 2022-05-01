@@ -23,7 +23,23 @@ export class AuthService {
         credentials.password
       );
     } catch (err: any) {
-      throw makeApiError(422, 'Failed to sign into account', err);
+      if (err.code === 'auth/wrong-password') {
+        throw makeApiError(422, 'Invalid password.', err);
+      }
+
+      if (err.code === 'auth/too-many-requests') {
+        throw makeApiError(
+          422,
+          'Too many requests. Account has been temporarily disabled.',
+          err
+        );
+      }
+
+      if (err.code === 'auth/user-not-found') {
+        throw makeApiError(422, 'Invalid email.', err);
+      }
+
+      throw makeApiError(422, 'Failed to sign into account.', err);
     }
   }
 
@@ -42,9 +58,9 @@ export class AuthService {
       );
     } catch (err: any) {
       if (err.code === 'auth/email-already-in-use') {
-        throw makeApiError(422, 'Email address already in use', err);
+        throw makeApiError(422, 'Email address already in use.', err);
       }
-      throw makeApiError(422, 'Failed to create an account', err);
+      throw makeApiError(422, 'Failed to create an account.', err);
     }
   }
 

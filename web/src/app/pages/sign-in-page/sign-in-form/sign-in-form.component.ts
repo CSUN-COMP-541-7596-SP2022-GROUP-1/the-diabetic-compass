@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../../modules/firebase/auth.service';
+import { AuthService } from 'src/app/modules/firebase/auth.service';
+import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -10,9 +11,11 @@ import { AuthService } from '../../../modules/firebase/auth.service';
   styleUrls: ['./sign-in-form.component.css'],
 })
 export class SignInFormComponent implements OnInit {
-  signInForm: FormGroup;
+  @Output() alerts = new EventEmitter<Alert[]>();
 
+  signInForm: FormGroup;
   showSpinner = false;
+
   constructor(private auth: AuthService, private router: Router) {
     this.signInForm = new FormGroup({
       email: new FormControl('', [Validators.email, Validators.required]),
@@ -29,13 +32,41 @@ export class SignInFormComponent implements OnInit {
 
     this.showSpinner = true;
 
-    await this.auth.signIn({
-      email: this.signInForm.value.email,
-      password: this.signInForm.value.password,
-    });
+    try {
+      await this.auth.signIn({
+        email: this.signInForm.value.email,
+        password: this.signInForm.value.password,
+      });
+    } catch (err: any) {
+      this.showSpinner = false;
 
-    this.showSpinner = false;
+      if (err.statusCode === 422 && err.code === 'auth/too-many-requests') {
+        return this.alerts.emit([
+          {
+            id: err.code ?? `${Date.now()}`,
+            type: ALERT_TYPE.DANGER,
+            msg: err.message,
+            timeout: 5000,
+            dismissible: true,
+          },
+        ]);
+      }
 
-    await this.router.navigate(['/']);
+      if (err.statusCode === 422) {
+        return this.alerts.emit([
+          {
+            id: err.code ?? `${Date.now()}`,
+            type: ALERT_TYPE.WARNING,
+            msg: err.message,
+            timeout: 5000,
+            dismissible: true,
+          },
+        ]);
+      }
+
+      throw err;
+    }
+
+    await this.router.navigate(['/profile']);
   }
 }

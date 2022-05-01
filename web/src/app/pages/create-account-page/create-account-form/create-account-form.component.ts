@@ -35,8 +35,9 @@ function _doubleCheckEnteredPassword(): ValidatorFn {
 export class CreateAccountFormComponent implements OnInit {
   @Output() alerts = new EventEmitter<Alert[]>();
 
-  showSpinner = false;
   createAccountForm: FormGroup;
+  showSpinner = false;
+
   constructor(
     private api: ApiService,
     private auth: AuthService,
@@ -83,22 +84,23 @@ export class CreateAccountFormComponent implements OnInit {
 
       this.showSpinner = false;
 
-      await this.router.navigate(['/']);
+      await this.router.navigate(['/profile']);
     } catch (err: any) {
       this.showSpinner = false;
-      if (err.code === 'auth/email-already-in-use') {
-        this.alerts.emit([
+
+      if (err.statusCode === 422) {
+        return this.alerts.emit([
           {
-            id: err.code,
+            id: err.code ?? `${Date.now()}`,
             type: ALERT_TYPE.WARNING,
             msg: err.message,
             timeout: 5000,
             dismissible: true,
           },
         ]);
-      } else {
-        throw err;
       }
+
+      throw err;
     }
   }
 }

@@ -25,8 +25,9 @@ export class HeaderComponent implements OnInit {
     return this.router.navigate([SIGN_IN_ROUTE]);
   }
 
-  handleSignOut() {
-    return this.auth.signOut();
+  async handleSignOut() {
+    await this.auth.signOut();
+    await this.router.navigate(['']);
   }
 
   atSignInPage() {

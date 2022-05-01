@@ -6,9 +6,11 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { CreateAccountPageComponent } from './pages/create-account-page/create-account-page.component';
 import { SignInPageComponent } from './pages/sign-in-page/sign-in-page.component';
 import { ResourcesPageComponent } from './pages/resources-page/resources-page.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 
 const routes: Routes = [
   { path: 'create-account', component: CreateAccountPageComponent },
+  { path: 'profile', component: ProfilePageComponent },
   { path: 'resources', component: ResourcesPageComponent },
   { path: 'sign-in', component: SignInPageComponent },
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
