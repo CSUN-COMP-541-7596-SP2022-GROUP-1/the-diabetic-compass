@@ -8,16 +8,16 @@ import { Alert } from 'src/app/interfaces/alert';
   styleUrls: ['./create-account-page.component.css'],
 })
 export class CreateAccountPageComponent implements OnInit {
-  alerts: Alert[] = [];
+  alerts: { [id: string]: Alert } = {};
+
   constructor() {}
 
   ngOnInit(): void {}
 
-  showAlerts(alerts: Alert[]) {
-    this.alerts = alerts;
-  }
-
-  onCloseAlert(alertId: string) {
-    this.alerts = [...this.alerts.filter((alert) => alert.id !== alertId)];
+  showAlert(alert: Alert) {
+    this.alerts = {
+      ...this.alerts,
+      [alert.id]: alert,
+    };
   }
 }

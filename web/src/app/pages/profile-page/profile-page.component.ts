@@ -35,7 +35,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   ];
 
   activeTab: { id: string; name: string; title: string };
-  alerts: Alert[] = [];
+  alerts: { [id: string]: Alert } = {};
 
   constructor(private api: ApiService, private auth: AuthService) {
     this.userInfo$ = new BehaviorSubject<UserInfo>(null);
@@ -88,11 +88,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.activeTab = tab;
   }
 
-  showAlerts(alerts: Alert[]) {
-    this.alerts = alerts;
-  }
-
-  onCloseAlert(alertId: string) {
-    this.alerts = [...this.alerts.filter((alert) => alert.id !== alertId)];
+  showAlert(alert: Alert) {
+    this.alerts = {
+      ...this.alerts,
+      [alert.id]: alert,
+    };
   }
 }

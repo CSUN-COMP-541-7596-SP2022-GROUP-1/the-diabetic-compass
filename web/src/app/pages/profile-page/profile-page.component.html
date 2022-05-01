@@ -1,16 +1,6 @@
 <app-header></app-header>
 
-<!-- alerts -->
-<div *ngFor="let alert of alerts">
-  <alert
-    class="position-relative"
-    [type]="alert.type"
-    [dismissible]="alert.dismissible"
-    [dismissOnTimeout]="alert.timeout"
-    (onClosed)="onCloseAlert(alert.id)"
-    ><strong>{{ alert.type | uppercase }} </strong>{{ alert.msg }}</alert
-  >
-</div>
+<app-alerts [alerts]="alerts"></app-alerts>
 
 <div class="container-fluid">
   <ng-container *ngIf="this.userInfo$ | async as userInfo; else loading">
@@ -35,7 +25,7 @@
           <h5 class="card-title text-center">{{ activeTab.title }}</h5>
           <app-edit-name-form
             [userInfo]="userInfo"
-            (alerts)="showAlerts($event)"
+            (alerts)="showAlert($event)"
           ></app-edit-name-form>
         </ng-container>
 

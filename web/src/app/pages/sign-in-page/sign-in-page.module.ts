@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 
 import { ComponentsModule } from '../../components/components.module';
 import { FirebaseModule } from '../../modules/firebase/firebase.module';
-import { NgxBootstrapModule } from 'src/app/modules/ngx-bootstrap/ngx-bootstrap.module';
 import { SignInPageComponent } from './sign-in-page.component';
 import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
 
@@ -17,7 +16,6 @@ import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
     ReactiveFormsModule,
     FirebaseModule,
     RouterModule,
-    NgxBootstrapModule,
   ],
   exports: [SignInPageComponent],
 })

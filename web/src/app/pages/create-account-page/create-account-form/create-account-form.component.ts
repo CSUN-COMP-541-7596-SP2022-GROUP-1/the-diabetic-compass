@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 
 import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
+import { makeAlert } from 'src/lib/make-alert';
 import { ApiService } from '../../../modules/api/api.service';
 import { AuthService } from '../../../modules/firebase/auth.service';
 
@@ -33,7 +34,7 @@ function _doubleCheckEnteredPassword(): ValidatorFn {
   styleUrls: ['./create-account-form.component.css'],
 })
 export class CreateAccountFormComponent implements OnInit {
-  @Output() alerts = new EventEmitter<Alert[]>();
+  @Output() alerts = new EventEmitter<Alert>();
 
   createAccountForm: FormGroup;
   showSpinner = false;
@@ -89,17 +90,13 @@ export class CreateAccountFormComponent implements OnInit {
       this.showSpinner = false;
 
       if (err.statusCode === 422) {
-        return this.alerts.emit([
-          {
-            id: err.code ?? `${Date.now()}`,
+        return this.alerts.emit(
+          makeAlert({
             type: ALERT_TYPE.WARNING,
             msg: err.message,
-            timeout: 5000,
-            dismissible: true,
-          },
-        ]);
+          })
+        );
       }
-
       throw err;
     }
   }

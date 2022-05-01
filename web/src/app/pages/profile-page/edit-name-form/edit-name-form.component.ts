@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
+import { makeAlert } from 'src/lib/make-alert';
 import { ApiService } from 'src/app/modules/api/api.service';
 
 type UserInfo = {
@@ -17,7 +18,7 @@ type UserInfo = {
 })
 export class EditNameFormComponent implements OnInit {
   @Input() userInfo: UserInfo = null;
-  @Output() alerts = new EventEmitter<Alert[]>();
+  @Output() alerts = new EventEmitter<Alert>();
 
   editNameForm: FormGroup;
   showSpinner = false;
@@ -49,14 +50,11 @@ export class EditNameFormComponent implements OnInit {
 
     this.showSpinner = false;
 
-    this.alerts.emit([
-      {
-        id: `${Date.now()}`,
+    this.alerts.emit(
+      makeAlert({
         type: ALERT_TYPE.SUCCESS,
-        msg: 'Refresh the page to see your changes',
-        timeout: 5000,
-        dismissible: true,
-      },
-    ]);
+        msg: 'Refresh the page to see your changes.',
+      })
+    );
   }
 }

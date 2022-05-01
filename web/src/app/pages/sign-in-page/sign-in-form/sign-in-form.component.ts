@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/modules/firebase/auth.service';
 import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
+import { makeAlert } from 'src/lib/make-alert';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -11,7 +12,7 @@ import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
   styleUrls: ['./sign-in-form.component.css'],
 })
 export class SignInFormComponent implements OnInit {
-  @Output() alerts = new EventEmitter<Alert[]>();
+  @Output() alerts = new EventEmitter<Alert>();
 
   signInForm: FormGroup;
   showSpinner = false;
@@ -41,27 +42,15 @@ export class SignInFormComponent implements OnInit {
       this.showSpinner = false;
 
       if (err.statusCode === 422 && err.code === 'auth/too-many-requests') {
-        return this.alerts.emit([
-          {
-            id: err.code ?? `${Date.now()}`,
-            type: ALERT_TYPE.DANGER,
-            msg: err.message,
-            timeout: 5000,
-            dismissible: true,
-          },
-        ]);
+        return this.alerts.emit(
+          makeAlert({ type: ALERT_TYPE.DANGER, msg: err.message })
+        );
       }
 
       if (err.statusCode === 422) {
-        return this.alerts.emit([
-          {
-            id: err.code ?? `${Date.now()}`,
-            type: ALERT_TYPE.WARNING,
-            msg: err.message,
-            timeout: 5000,
-            dismissible: true,
-          },
-        ]);
+        return this.alerts.emit(
+          makeAlert({ type: ALERT_TYPE.WARNING, msg: err.message })
+        );
       }
 
       throw err;
