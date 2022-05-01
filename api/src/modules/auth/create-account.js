@@ -1,18 +1,18 @@
 const assert = require('assert');
-const debug = require('debug')('tdc:create-account');
+const debug = require('debug')('tdc:auth/create-account');
 const { json } = require('micro');
 
-const { makeApiError } = require('../../lib/make-api-error');
-const { validate } = require('../../lib/validate');
-const { authorize, authenticate, TOKEN_TYPES } = require('../auth');
+const { makeApiError } = require('../../../lib/make-api-error');
+const { validate } = require('../../../lib/validate');
+const { authorize, authenticate, TOKEN_TYPES } = require('../../auth');
 const {
   createTransaction,
   User,
   UserRole,
   UserFirebaseAuth,
-} = require('../services/db');
+} = require('../../services/db');
 
-async function _createAccount(
+async function createAccount(
   params,
   context,
   {
@@ -33,7 +33,7 @@ async function _createAccount(
     params
   );
 
-  authorize('create-account', context);
+  authorize('auth/create-account', context, {});
 
   const [tokenType, tokenSecret] = (context.token || '/').split('/');
 
@@ -117,4 +117,4 @@ async function _createAccount(
 }
 
 exports.POST = async (req) =>
-  _createAccount(await json(req), await authenticate(req));
+  createAccount(await json(req), await authenticate(req));

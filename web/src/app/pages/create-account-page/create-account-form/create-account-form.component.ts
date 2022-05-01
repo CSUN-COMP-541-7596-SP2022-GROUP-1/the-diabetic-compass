@@ -70,7 +70,7 @@ export class CreateAccountFormComponent implements OnInit {
         password: this.createAccountForm.value.password,
       });
 
-      await this.api.post('/create-account', {
+      await this.api.post('/auth/create-account', {
         email: this.createAccountForm.value.email,
         firstName: this.createAccountForm.value.firstName,
         lastName: this.createAccountForm.value.lastName,

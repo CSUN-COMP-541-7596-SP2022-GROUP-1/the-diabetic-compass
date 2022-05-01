@@ -1,5 +1,21 @@
 <app-header></app-header>
 
 <div class="container-fluid">
-  <h2>Welcome to the Profile Page!</h2>
+  <ng-container *ngIf="this.userInfo$ | async as userInfo; else loading">
+    <h2>Hi, {{ userInfo.firstName }} {{ userInfo.lastName }}!</h2>
+  </ng-container>
+
+  <ng-template #loading>
+    <div
+      class="d-flex flex-column justify-content-center align-items-center"
+      style="height: 100vh"
+    >
+      <div class="spinner-border" role="status"></div>
+    </div>
+  </ng-template>
+
+  <!-- For debugging purposes -->
+  <!-- <pre>
+    {{ userInfo$ | async | json }}
+  </pre> -->
 </div>

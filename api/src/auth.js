@@ -73,20 +73,41 @@ async function authenticate(req) {
 }
 exports.authenticate = authenticate;
 
-function _capabilities(context) {
+function _capabilities(context, resource) {
   if (!context) {
     return [];
   }
-  // Basic capabilities
-  const basicCapabilities = ['create-account'];
 
-  // Scoped capabilities
+  // PLEASE KEEP THESE CAPABILITIES IN ALPHABETICAL ORDER !
 
-  return [...basicCapabilities];
+  // Anyones capabilities
+  const anyonesCapabilities = ['auth/create-account'];
+
+  // User capabilities
+  if (
+    context.userRole?.role === 'USER' &&
+    context.user?.id === resource.userId
+  ) {
+    const userCapabilities = [...anyonesCapabilities, 'users/read'];
+
+    return userCapabilities;
+  }
+
+  // Admin capabilities
+  if (
+    context.userRole?.role === 'ADMIN' &&
+    context.user?.id === resource.userId
+  ) {
+    const adminCapabilities = [...anyonesCapabilities, 'users/read'];
+
+    return adminCapabilities;
+  }
+
+  return anyonesCapabilities;
 }
 
-function authorize(capability, context) {
-  const authorized = _capabilities(context).includes(capability);
+function authorize(capability, context, resource) {
+  const authorized = _capabilities(context, resource).includes(capability);
 
   if (!authorized) {
     throw makeApiError(401, 'Unauthorized');
