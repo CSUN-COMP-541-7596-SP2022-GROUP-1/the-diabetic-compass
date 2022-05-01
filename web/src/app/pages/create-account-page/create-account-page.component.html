@@ -1,11 +1,25 @@
 <app-header></app-header>
 
+<!-- alerts -->
+<div *ngFor="let alert of alerts">
+  <alert
+    class="fixed-bottom"
+    [type]="alert.type"
+    [dismissible]="alert.dismissible"
+    [dismissOnTimeout]="alert.timeout"
+    (onClosed)="onCloseAlert(alert.id)"
+    ><strong>{{ alert.type | uppercase }}! </strong>{{ alert.msg }}</alert
+  >
+</div>
+
 <div class="container">
   <div class="row align-items-center justify-content-center">
     <div class="col-4">
       <h3 style="text-align: center">Create an account</h3>
 
-      <app-create-account-form></app-create-account-form>
+      <app-create-account-form
+        (alerts)="showAlerts($event)"
+      ></app-create-account-form>
     </div>
   </div>
 

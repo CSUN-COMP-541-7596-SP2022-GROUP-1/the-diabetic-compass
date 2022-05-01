@@ -8,6 +8,7 @@ import { CreateAccountPageComponent } from './create-account-page.component';
 import { CreateAccountFormComponent } from './create-account-form/create-account-form.component';
 import { FirebaseModule } from 'src/app/modules/firebase/firebase.module';
 import { ApiModule } from 'src/app/modules/api/api.module';
+import { NgxBootstrapModule } from 'src/app/modules/ngx-bootstrap/ngx-bootstrap.module';
 
 @NgModule({
   declarations: [CreateAccountPageComponent, CreateAccountFormComponent],
@@ -18,6 +19,7 @@ import { ApiModule } from 'src/app/modules/api/api.module';
     RouterModule,
     ApiModule,
     FirebaseModule,
+    NgxBootstrapModule,
   ],
   exports: [CreateAccountPageComponent],
 })

@@ -19,9 +19,25 @@
     />
   </div>
 
-  <button class="btn btn-primary" type="submit" [disabled]="!signInForm.valid">
-    Sign in
-  </button>
+  <ng-container *ngIf="this.showSpinner; else noSpinner">
+    <button class="btn btn-primary" disabled>
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      Signing in ...
+    </button>
+  </ng-container>
+  <ng-template #noSpinner>
+    <button
+      class="btn btn-primary"
+      type="submit"
+      [disabled]="!signInForm.valid"
+    >
+      Sign in
+    </button>
+  </ng-template>
 </form>
 
 <!-- For debugging purposes -->

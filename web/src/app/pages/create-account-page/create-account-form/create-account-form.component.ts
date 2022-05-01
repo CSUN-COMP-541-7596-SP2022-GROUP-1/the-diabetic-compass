@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
 import { ApiService } from '../../../modules/api/api.service';
 import { AuthService } from '../../../modules/firebase/auth.service';
 
@@ -32,6 +33,9 @@ function _doubleCheckEnteredPassword(): ValidatorFn {
   styleUrls: ['./create-account-form.component.css'],
 })
 export class CreateAccountFormComponent implements OnInit {
+  @Output() alerts = new EventEmitter<Alert[]>();
+
+  showSpinner = false;
   createAccountForm: FormGroup;
   constructor(
     private api: ApiService,
@@ -43,6 +47,8 @@ export class CreateAccountFormComponent implements OnInit {
         email: new FormControl('', [Validators.email, Validators.required]),
         password: new FormControl('', [Validators.required]),
         reenterPassword: new FormControl('', [Validators.required]),
+        firstName: new FormControl(''),
+        lastName: new FormControl(''),
       },
       [_doubleCheckEnteredPassword()]
     );
@@ -51,32 +57,47 @@ export class CreateAccountFormComponent implements OnInit {
   ngOnInit(): void {}
 
   async onSubmit() {
-    if (this.createAccountForm.valid) {
-      let user;
+    if (!this.createAccountForm.valid) {
+      return;
+    }
 
-      try {
-        ({ user } = await this.auth.signUpWithEmailAndPassword({
-          email: this.createAccountForm.value.email,
-          password: this.createAccountForm.value.password,
-        }));
-      } catch (err: any) {
-        // TODO: Consider error handling cases for when there is an issue
-        // signing up with firebase
-        if (err.code === 'auth/email-already-in-use') {
-        }
-      }
+    this.showSpinner = true;
 
-      if (user) {
-        try {
-          await this.api.post('/create-account', {
-            email: this.createAccountForm.value.email,
-          });
-        } catch (err) {
-          // TODO: Consider error handling cases for when there is an issue with
-          // creating an account via our api
-        }
+    try {
+      await this.auth.signUpWithEmailAndPassword({
+        email: this.createAccountForm.value.email,
+        password: this.createAccountForm.value.password,
+      });
 
-        await this.router.navigate(['/']);
+      await this.api.post('/create-account', {
+        email: this.createAccountForm.value.email,
+        firstName: this.createAccountForm.value.firstName,
+        lastName: this.createAccountForm.value.lastName,
+      });
+
+      // Explicitly sign in the user
+      await this.auth.signIn({
+        email: this.createAccountForm.value.email,
+        password: this.createAccountForm.value.password,
+      });
+
+      this.showSpinner = false;
+
+      await this.router.navigate(['/']);
+    } catch (err: any) {
+      this.showSpinner = false;
+      if (err.code === 'auth/email-already-in-use') {
+        this.alerts.emit([
+          {
+            id: err.code,
+            type: ALERT_TYPE.WARNING,
+            msg: err.message,
+            timeout: 5000,
+            dismissible: true,
+          },
+        ]);
+      } else {
+        throw err;
       }
     }
   }

@@ -1,4 +1,5 @@
 const assert = require('assert');
+const debug = require('debug')('tdc:create-account');
 const { json } = require('micro');
 
 const { makeApiError } = require('../../lib/make-api-error');
