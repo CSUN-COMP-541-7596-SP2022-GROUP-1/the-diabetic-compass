@@ -32,6 +32,15 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       name: 'Reset Password',
       title: 'Reset your password',
     },
+    {
+      id: 'useDiabeticCompass',
+      name: 'Use Diabetic Compass',
+      title: 'Use Diabetic Compass',
+
+      // HACK to manually load this particular tab
+      hidden: true,
+      // End of HACK
+    },
   ];
 
   activeTab: { id: string; name: string; title: string };

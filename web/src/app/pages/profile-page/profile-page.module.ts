@@ -9,12 +9,14 @@ import { NgxBootstrapModule } from 'src/app/modules/ngx-bootstrap/ngx-bootstrap.
 import { ProfilePageComponent } from './profile-page.component';
 import { EditNameFormComponent } from './edit-name-form/edit-name-form.component';
 import { ResetPasswordFormComponent } from './reset-password-form/reset-password-form.component';
+import { UseDiabeticCompassFormComponent } from './use-diabetic-compass-form/use-diabetic-compass-form.component';
 
 @NgModule({
   declarations: [
     ProfilePageComponent,
     EditNameFormComponent,
     ResetPasswordFormComponent,
+    UseDiabeticCompassFormComponent,
   ],
   imports: [
     CommonModule,
