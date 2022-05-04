@@ -113,7 +113,7 @@ export class UseDiabeticCompassFormComponent implements OnInit {
       return;
     }
 
-    console.log({
+    const data = {
       // Demographic Information
       sex: SEX[this.useDiabeticCompassForm.value.sex],
       ageCategory: AGEG5YR[this.useDiabeticCompassForm.value.ageCategory],
@@ -162,6 +162,8 @@ export class UseDiabeticCompassFormComponent implements OnInit {
       eatsFruits: POLAR_RESPONSE[this.useDiabeticCompassForm.value.eatsFruits],
       eatsVegetables:
         POLAR_RESPONSE[this.useDiabeticCompassForm.value.eatsVegetables],
-    });
+    };
+
+    console.log(data);
   }
 }
