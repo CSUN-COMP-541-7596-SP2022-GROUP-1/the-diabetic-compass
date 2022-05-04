@@ -77,6 +77,12 @@ export class UseDiabeticCompassFormComponent implements OnInit {
     // NOTE: Opting to use 0 and 1 to map closely to what our ML model expects
     // instead of using true / false
     this.useDiabeticCompassForm = new FormGroup({
+      // Demographic Info
+      sex: new FormControl('', [Validators.required]),
+      ageCategory: new FormControl('', [Validators.required]),
+      educationLevel: new FormControl('', [Validators.required]),
+      incomeLevel: new FormControl('', [Validators.required]),
+
       // Health Info
       hasHighBloodPressure: new FormControl('', [Validators.required]),
       hasHighCholesterol: new FormControl('', [Validators.required]),
@@ -97,12 +103,6 @@ export class UseDiabeticCompassFormComponent implements OnInit {
       isPhysicallyActive: new FormControl('', [Validators.required]),
       eatsFruits: new FormControl('', [Validators.required]),
       eatsVegetables: new FormControl('', [Validators.required]),
-
-      // Demographic Info
-      sex: new FormControl('', [Validators.required]),
-      ageCategory: new FormControl('', [Validators.required]),
-      educationLevel: new FormControl('', [Validators.required]),
-      incomeLevel: new FormControl('', [Validators.required]),
     });
   }
 
@@ -114,7 +114,14 @@ export class UseDiabeticCompassFormComponent implements OnInit {
     }
 
     console.log({
-      ...this.useDiabeticCompassForm.value,
+      // Demographic Information
+      sex: SEX[this.useDiabeticCompassForm.value.sex],
+      ageCategory: AGEG5YR[this.useDiabeticCompassForm.value.ageCategory],
+      educationLevel:
+        EDUCATION_LEVEL[this.useDiabeticCompassForm.value.educationLevel],
+      incomeLevel: INCOME_LEVEL[this.useDiabeticCompassForm.value.incomeLevel],
+
+      // Health Info
       hasHighBloodPressure:
         POLAR_RESPONSE[this.useDiabeticCompassForm.value.hasHighBloodPressure],
       hasHighCholesterol:
@@ -129,7 +136,17 @@ export class UseDiabeticCompassFormComponent implements OnInit {
         POLAR_RESPONSE[
           this.useDiabeticCompassForm.value.couldntAffordDoctorVisit
         ],
+      bodyMassIndex: parseFloat(
+        this.useDiabeticCompassForm.value.bodyMassIndex.toFixed(1)
+      ),
+      generalHeathRating:
+        GENERAL_HEALTH_RATING[
+          this.useDiabeticCompassForm.value.generalHeathRating
+        ],
 
+      // Lifestyle Info
+      isHeavyDrinker:
+        POLAR_RESPONSE[this.useDiabeticCompassForm.value.isHeavyDrinker],
       isSmoker: POLAR_RESPONSE[this.useDiabeticCompassForm.value.isSmoker],
       hadStroke: POLAR_RESPONSE[this.useDiabeticCompassForm.value.hadStroke],
       hasHeartDiseaseOrAttack:
@@ -145,18 +162,6 @@ export class UseDiabeticCompassFormComponent implements OnInit {
       eatsFruits: POLAR_RESPONSE[this.useDiabeticCompassForm.value.eatsFruits],
       eatsVegetables:
         POLAR_RESPONSE[this.useDiabeticCompassForm.value.eatsVegetables],
-      isHeavyDrinker:
-        POLAR_RESPONSE[this.useDiabeticCompassForm.value.isHeavyDrinker],
-
-      sex: SEX[this.useDiabeticCompassForm.value.sex],
-      ageCategory: AGEG5YR[this.useDiabeticCompassForm.value.ageCategory],
-      educationLevel:
-        EDUCATION_LEVEL[this.useDiabeticCompassForm.value.educationLevel],
-      incomeLevel: INCOME_LEVEL[this.useDiabeticCompassForm.value.incomeLevel],
-      generalHeathRating:
-        GENERAL_HEALTH_RATING[
-          this.useDiabeticCompassForm.value.generalHeathRating
-        ],
     });
   }
 }
