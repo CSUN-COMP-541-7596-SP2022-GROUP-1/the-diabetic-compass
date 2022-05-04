@@ -82,7 +82,7 @@ function _capabilities(context, resource) {
   // PLEASE KEEP THESE CAPABILITIES IN ALPHABETICAL ORDER !
 
   // Anyones capabilities
-  const anyonesCapabilities = ['auth/create-account'];
+  const anyonesCapabilities = ['auth/create-account', 'ml'];
 
   // User capabilities
   if (

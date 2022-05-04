@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
 import { makeAlert } from 'src/lib/make-alert';
+import { ApiService } from 'src/app/modules/api/api.service';
 
 // A polar response is a response to a polar question (yes / no question)
 enum POLAR_RESPONSE {
@@ -73,7 +74,7 @@ export class UseDiabeticCompassFormComponent implements OnInit {
   useDiabeticCompassForm: FormGroup;
   showSpinner = false;
 
-  constructor() {
+  constructor(private api: ApiService) {
     // NOTE: Opting to use 0 and 1 to map closely to what our ML model expects
     // instead of using true / false
     this.useDiabeticCompassForm = new FormGroup({
@@ -164,6 +165,9 @@ export class UseDiabeticCompassFormComponent implements OnInit {
         POLAR_RESPONSE[this.useDiabeticCompassForm.value.eatsVegetables],
     };
 
-    console.log(data);
+    this.api
+      .post('/ml', JSON.stringify(data))
+      .then(console.log)
+      .catch(console.error);
   }
 }
