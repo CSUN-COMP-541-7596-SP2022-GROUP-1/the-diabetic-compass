@@ -30,7 +30,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     {
       id: 'resetPassword',
       name: 'Reset Password',
-      title: 'Reset your password',
+      title: 'Send password reset email',
     },
     {
       id: 'useDiabeticCompass',

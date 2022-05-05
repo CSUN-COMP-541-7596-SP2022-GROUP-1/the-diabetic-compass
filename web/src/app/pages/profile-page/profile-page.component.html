@@ -44,7 +44,10 @@
 
         <ng-container *ngIf="activeTab.id === 'resetPassword'">
           <h5 class="card-title text-center">{{ activeTab.title }}</h5>
-          <app-reset-password-form></app-reset-password-form>
+          <app-reset-password-form
+            [userInfo]="userInfo"
+            (alerts)="showAlert($event)"
+          ></app-reset-password-form>
         </ng-container>
 
         <ng-container *ngIf="activeTab.id === 'useDiabeticCompass'">

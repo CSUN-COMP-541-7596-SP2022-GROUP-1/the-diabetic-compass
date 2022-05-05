@@ -64,6 +64,24 @@ export class AuthService {
     }
   }
 
+  async sendPasswordResetEmail(email: string) {
+    try {
+      const user = await this.auth.currentUser;
+
+      if (email && user?.email !== email) {
+        throw makeApiError(422, 'Email does not belong to user!');
+      }
+
+      await this.auth.sendPasswordResetEmail(email);
+    } catch (err: any) {
+      console.error(err);
+      if (err.statusCode === 422) {
+        throw err;
+      }
+      throw makeApiError(422, 'Failed to send password reset email.', err);
+    }
+  }
+
   get currentUser() {
     return this.auth.currentUser;
   }
