@@ -12,5 +12,6 @@
      - Password: `password`
      - Database: `tdc-dev`
    - rambler service; applies any migrations found in `rambler/migrations`
+   - ml service; use machine learning to predict whether or not you are at risk / have diabetes
 3. Run `npm install` in `web` to install dependencies for `web` and run `npm run dev` to spin up web app locally on http://localhost:4200
 4. Run `npm install` in `api` to install dependeices for `api` and run `npm run dev` to spin up api server locally on http://localhost:3000
