@@ -44,7 +44,7 @@ def index():
   errors = []
 
   if request.method == 'POST':
-    data['prediction'] = predict(request.json['dataFrame'])
+    data['prediction'] = predict(request.json['normalizedDataFrame'])
 
   return {
     'data': data,
