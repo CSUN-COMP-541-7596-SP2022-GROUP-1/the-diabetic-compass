@@ -1,10 +1,17 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { BsModalService, BsModalRef, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { Alert, ALERT_TYPE } from 'src/app/interfaces/alert';
 import { makeAlert } from 'src/lib/make-alert';
 import { ApiService } from 'src/app/modules/api/api.service';
+import { ResultModalComponent } from '../result-modal/result-modal.component';
 
 // A polar response is a response to a polar question (yes / no question)
 enum POLAR_RESPONSE {
@@ -65,16 +72,24 @@ enum INCOME_LEVEL {
   MORE_75000 = 8,
 }
 
+// Artificially delaying the results in order to give the illusion that some
+// really serious numbers are being crunched LOL (they are being crunched but
+// doesn't really take that long)
+const RESULTS_DELAY_IN_MS = 2000;
+
 @Component({
   selector: 'app-use-diabetic-compass-form',
   templateUrl: './use-diabetic-compass-form.component.html',
   styleUrls: ['./use-diabetic-compass-form.component.css'],
 })
-export class UseDiabeticCompassFormComponent implements OnInit {
+export class UseDiabeticCompassFormComponent implements OnInit, OnDestroy {
   useDiabeticCompassForm: FormGroup;
   showSpinner = false;
 
-  constructor(private api: ApiService) {
+  resultModalRef?: BsModalRef;
+  resultsTimer: any;
+
+  constructor(private api: ApiService, private modal: BsModalService) {
     // NOTE: Opting to use 0 and 1 to map closely to what our ML model expects
     // instead of using true / false
     this.useDiabeticCompassForm = new FormGroup({
@@ -109,10 +124,20 @@ export class UseDiabeticCompassFormComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  ngOnDestroy(): void {
+    if (!this.resultsTimer) {
+      return;
+    }
+
+    clearTimeout(this.resultsTimer);
+  }
+
   async onSubmit() {
     if (this.useDiabeticCompassForm.invalid) {
       return;
     }
+
+    this.showSpinner = true;
 
     const data = {
       // Demographic Information
@@ -165,9 +190,30 @@ export class UseDiabeticCompassFormComponent implements OnInit {
         POLAR_RESPONSE[this.useDiabeticCompassForm.value.eatsVegetables],
     };
 
-    this.api
-      .post('/ml', JSON.stringify(data))
-      .then(console.log)
-      .catch(console.error);
+    try {
+      const res: any = await this.api.post('/ml', JSON.stringify(data));
+
+      if (this.resultsTimer) {
+        clearTimeout(this.resultsTimer);
+      }
+
+      this.resultsTimer = setTimeout(() => {
+        this.showResultsModal(res.data);
+        this.showSpinner = false;
+      }, RESULTS_DELAY_IN_MS);
+    } catch (err) {
+      console.error(err);
+      this.showSpinner = false;
+    }
+  }
+
+  showResultsModal(data: any) {
+    const opts: ModalOptions = {
+      initialState: {
+        data,
+      },
+    };
+
+    this.resultModalRef = this.modal.show(ResultModalComponent, opts);
   }
 }
