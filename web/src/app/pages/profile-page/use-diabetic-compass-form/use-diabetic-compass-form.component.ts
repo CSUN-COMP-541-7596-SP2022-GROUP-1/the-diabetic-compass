@@ -83,6 +83,8 @@ const RESULTS_DELAY_IN_MS = 2000;
   styleUrls: ['./use-diabetic-compass-form.component.css'],
 })
 export class UseDiabeticCompassFormComponent implements OnInit, OnDestroy {
+  @Output() alerts = new EventEmitter<Alert>();
+
   useDiabeticCompassForm: FormGroup;
   showSpinner = false;
 
@@ -203,6 +205,12 @@ export class UseDiabeticCompassFormComponent implements OnInit, OnDestroy {
       }, RESULTS_DELAY_IN_MS);
     } catch (err) {
       console.error(err);
+      this.alerts.emit(
+        makeAlert({
+          type: ALERT_TYPE.WARNING,
+          msg: 'Something went wrong! Please try again or contact support.',
+        })
+      );
       this.showSpinner = false;
     }
   }

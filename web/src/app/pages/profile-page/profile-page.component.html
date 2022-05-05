@@ -49,7 +49,9 @@
 
         <ng-container *ngIf="activeTab.id === 'useDiabeticCompass'">
           <h5 class="card-title text-center">{{ activeTab.title }}</h5>
-          <app-use-diabetic-compass-form></app-use-diabetic-compass-form>
+          <app-use-diabetic-compass-form
+            (alerts)="showAlert($event)"
+          ></app-use-diabetic-compass-form>
         </ng-container>
       </div>
     </div>

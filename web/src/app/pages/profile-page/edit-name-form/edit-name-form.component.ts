@@ -46,15 +46,24 @@ export class EditNameFormComponent implements OnInit {
     }
     this.showSpinner = true;
 
-    await this.api.post('/users/update-name', this.editNameForm.value);
+    try {
+      await this.api.post('/users/update-name', this.editNameForm.value);
+      this.alerts.emit(
+        makeAlert({
+          type: ALERT_TYPE.SUCCESS,
+          msg: 'Refresh the page to see your changes.',
+        })
+      );
+    } catch (err) {
+      console.error(err);
+      this.alerts.emit(
+        makeAlert({
+          type: ALERT_TYPE.WARNING,
+          msg: 'Something went wrong! Please try again or contact support.',
+        })
+      );
+    }
 
     this.showSpinner = false;
-
-    this.alerts.emit(
-      makeAlert({
-        type: ALERT_TYPE.SUCCESS,
-        msg: 'Refresh the page to see your changes.',
-      })
-    );
   }
 }
