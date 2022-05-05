@@ -1,15 +1,14 @@
 const assert = require('assert');
-const path = require('path');
-const { spawn } = require('child_process');
 const debug = require('debug')('tdc:ml');
 const { json } = require('micro');
+const axios = require('axios').default;
 
 const { makeApiError } = require('../../../lib/make-api-error');
 const { validate } = require('../../../lib/validate');
 const { authorize, authenticate } = require('../../auth');
 const { createTransaction, User } = require('../../services/db');
 
-async function ml(params, context, { UserInjection = User } = {}) {
+async function ml(params, context, {} = {}) {
   validate(
     {
       type: 'object',
@@ -103,15 +102,41 @@ async function ml(params, context, { UserInjection = User } = {}) {
 
   authorize('ml', context, {});
 
+  // Formatting our params to a data frame that our ml service expects
+  const dataFrame = [
+    params.hasHighBloodPressure, // HighBP
+    params.hasHighCholesterol, // HighChol
+    params.hadCholesterolCheckLastFiveYears, // CholCheck
+    params.bodyMassIndex, // BMI
+    params.isSmoker, // Smoker
+    params.hadStroke, // Stroke
+    params.hasHeartDiseaseOrAttack, // HeartDiseaseorAttack
+    params.isPhysicallyActive, // PhysActivity
+    params.eatsFruits, // Fruits
+    params.eatsVegetables, // Veggies
+    params.isHeavyDrinker, // HvyAlcoholConsump
+    params.hasHealthCare, // AnyHealthcare
+    params.couldntAffordDoctorVisit, // NoDocbcCost
+    params.generalHeathRating, // GenHlth
+    params.hasDifficultyWithStairs, // DiffWalk
+    params.sex, // Sex
+    params.ageCategory, // Age
+    params.educationLevel, // Education
+    params.incomeLevel, // Income
+  ];
+
   const data = {
     params,
+    dataFrame,
   };
+
   const errors = [];
 
-  const cwd = process.cwd();
-  const mainPyPath = path.resolve(cwd, 'python', 'main.py');
-
-  debug(mainPyPath);
+  await axios.post('http://127.0.0.1:5000', JSON.stringify(data), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
   return { data, errors };
 }
