@@ -57,4 +57,4 @@ if __name__ == '__main__':
   if dtc is None:
     print('Error setting up model')
   else:
-    app.run()
+    app.run(host="0.0.0.0")
