@@ -1,6 +1,5 @@
 from pathlib import Path
 import pandas as pd
-import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask
@@ -9,7 +8,7 @@ from flask import request
 # Global vars
 csv_path = Path('./Diabetes_Normalized.csv').resolve()
 
-spit = ["HighBP", 'HighChol', 'CholCheck', 'BMI', "Smoker", 'Stroke', 'HeartDiseaseorAttack', 'PhysActivity',
+spit = ['HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker', 'Stroke', 'HeartDiseaseorAttack', 'PhysActivity',
         'Fruits', 'Veggies', 'HvyAlcoholConsump', 'AnyHealthcare', 'NoDocbcCost', 'GenHlth', 'DiffWalk', 'Sex',
         'Age', 'Education', 'Income']
 
@@ -32,18 +31,20 @@ def predict(data_array):
   global spit
   global dtc
 
-  test_data_frame = pd.DataFrame(data_array, columns=spit)
-  return dtc.predict(test_data_frame)
+  data = [data_array]
+  test_data_frame = pd.DataFrame(data, columns=spit)
+  prediction = dtc.predict(test_data_frame)
+  return prediction.tolist()
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
   data = {}
   errors = []
 
   if request.method == 'POST':
-    data.prediction = predict(request.body.dataFrame)
+    data['prediction'] = predict(request.json['dataFrame'])
 
   return {
     'data': data,

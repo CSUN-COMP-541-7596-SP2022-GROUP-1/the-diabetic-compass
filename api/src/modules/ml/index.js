@@ -132,13 +132,15 @@ async function ml(params, context, {} = {}) {
 
   const errors = [];
 
-  await axios.post('http://127.0.0.1:5000', JSON.stringify(data), {
+  const {
+    data: { data: prediction },
+  } = await axios.post('http://127.0.0.1:5000', JSON.stringify(data), {
     headers: {
       'Content-Type': 'application/json',
     },
   });
 
-  return { data, errors };
+  return { data: { ...data, prediction }, errors };
 }
 
 exports.POST = async (req) => ml(await json(req), await authenticate(req));
