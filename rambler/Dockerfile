@@ -15,8 +15,6 @@ RUN apk add --no-cache postgresql-client
 # rambler
 COPY --from=rambler_builder /go/bin/rambler /usr/local/bin
 
-WORKDIR /usr/src/app
-
 COPY . .
 
 # after set up is done, set RAMBLER envs and apply all migrations
