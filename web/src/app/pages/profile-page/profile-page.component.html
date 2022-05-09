@@ -51,7 +51,18 @@
         </ng-container>
 
         <ng-container *ngIf="activeTab.id === 'useDiabeticCompass'">
-          <h5 class="card-title text-center">{{ activeTab.title }}</h5>
+          <div class="row justify-content-center align-items-center">
+            <div class="col-4">
+              <div class="row justify-content-center align-items-center">
+                <img
+                  src="/assets/images/Diabetic_Compass_Logo_Text.png"
+                  width="256"
+                  height="256"
+                  style="max-width: 272px; max-height: 256px"
+                />
+              </div>
+            </div>
+          </div>
           <app-use-diabetic-compass-form
             (alerts)="showAlert($event)"
           ></app-use-diabetic-compass-form>

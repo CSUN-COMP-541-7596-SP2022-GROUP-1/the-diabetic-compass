@@ -20,11 +20,11 @@ enum POLAR_RESPONSE {
 }
 
 enum GENERAL_HEALTH_RATING {
-  EXCELLENT = 5,
-  VERY_GOOD = 4,
+  EXCELLENT = 1,
+  VERY_GOOD = 2,
   GOOD = 3,
-  FAIR = 2,
-  POOR = 1,
+  FAIR = 4,
+  POOR = 5,
 }
 
 enum SEX {
