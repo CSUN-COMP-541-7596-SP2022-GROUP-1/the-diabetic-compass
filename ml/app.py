@@ -6,7 +6,7 @@ from flask import Flask
 from flask import request
 
 # Global vars
-csv_path = Path('./Diabetes_Normalized.csv').resolve()
+csv_path = Path('./Diabetes_Normalized_Balanced.csv').resolve()
 
 spit = ['HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker', 'Stroke', 'HeartDiseaseorAttack', 'PhysActivity',
         'Fruits', 'Veggies', 'HvyAlcoholConsump', 'AnyHealthcare', 'NoDocbcCost', 'GenHlth', 'DiffWalk', 'Sex',
