@@ -18,14 +18,17 @@ def setup():
   global csv_path
   global spit
   global dtc
-
+  
+  print('Initializing ML service...')
   data_frame = pd.read_csv(csv_path)
+  print(f'Data frame row length: {len(data_frame)}')
   subject = data_frame.Diabetes_012
   data_frame = data_frame[spit]
   sub_train, sub_test, all_train, all_test = train_test_split(data_frame, subject, test_size=.20)
   _dtc = LogisticRegression()
   _dtc.fit(sub_train, all_train)
   dtc = _dtc
+  print('Initialization complete.')
 
 def predict(data_array):
   global spit
